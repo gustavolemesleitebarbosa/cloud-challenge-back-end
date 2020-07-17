@@ -17,7 +17,7 @@
         "cors": "^2.8.5",
         "csurf": "^1.11.0",
         "dust-makara-helpers": "^4.2.0",
-        "eslint": "^1.10.3",
+        "eslint": "^4.18.2",
         "express": "^4.12.2",
         "kraken-js": "^2.0.0",
         "makara": "^2.1.0",
