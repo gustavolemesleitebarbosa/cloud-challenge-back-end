@@ -4,13 +4,14 @@ module.exports = function (router) {
     function raffflePositions(numberOfAirports,numberOfClouds, numberOfColumns,numberOfRows){
         var i;
         var skyArray =[];
-        for (i = 0; i < (numberOfColumns * numberOfRows); i++ ) {
+        var numberOfElements=numberOfColumns * numberOfRows;
+        for (i = 0; i < numberOfElements; i++ ) {
             skyArray.push('.');
         }
       // raffle positions for airplanes
         var position;
         for (i = 0; i < numberOfAirports; ) {
-            position = Math.floor(Math.random() * (numberOfColumns * numberOfRows) + 1);
+            position = Math.floor(Math.random() * (numberOfElements));
             if (skyArray[position] !== 'A') {
                 skyArray[position] = 'A';
                 i += 1;
@@ -18,8 +19,7 @@ module.exports = function (router) {
         }
       // raffle positions for clouds
         for ( i = 0; i < numberOfClouds; ) {
-            position = Math.floor(
-            Math.random() * (numberOfColumns * numberOfRows) + 1);
+            position = Math.floor( Math.random() * numberOfElements);
             if (skyArray[position] !== 'A' && skyArray[position] !== '*') {
                 skyArray[position] = '*';
                 i += 1;
@@ -48,7 +48,7 @@ module.exports = function (router) {
         var futureSkyMatrix = [], i, j, k;
 
         //init the grid matrix
-        for ( k = 0; k < numberOfColumns; k++ ) {
+        for ( k = 0; k < numberOfRows; k++ ) {
             futureSkyMatrix[k] = [];
         }
 
@@ -80,7 +80,7 @@ module.exports = function (router) {
         for ( i = 0; i < numberOfRows; i++) {
             for(j=0;j< numberOfColumns ;j++){
                 if (skyMatrix[i][j] === 'A' && (i>0 && skyMatrix[i-1][j] =='*'
-                ||i<numberOfRows-1 && skyMatrix[i+1][j]=='*'||j>0 && skyMatrix[i][j-1]=='*'||j<numberOfRows-1 && skyMatrix[i][j+1]=='*'))
+                ||i<numberOfRows-1 && skyMatrix[i+1][j]=='*'||j>0 && skyMatrix[i][j-1]=='*'||j<numberOfColumns-1 && skyMatrix[i][j+1]=='*'))
                     hits++;
             }
         }
@@ -106,7 +106,7 @@ module.exports = function (router) {
         for(;; days++){
             var newHits =howManyAirportsAreGoingToBeHitTomorrow(skyMatrix,numberOfColumns,numberOfRows);
             hits+= newHits;
-            if(hits==numberOfAirports)
+            if(hits>=numberOfAirports)
                 return days;
             skyMatrix= getNextDayMatrix(skyMatrix,numberOfColumns,numberOfRows);
         }
@@ -135,7 +135,6 @@ module.exports = function (router) {
         var daysToFirstHit = getDaysUntilFirstAirportIsHit(skyMatrix, numberOfColumns, numberOfRows, numberOfAirports);
         var daysToAllHits = getDaysUntilAllAirportAreHit(skyMatrix, numberOfColumns, numberOfRows, numberOfAirports);
         var history = getSkyHistory(skyMatrix,numberOfColumns, numberOfRows,daysToAllHits);
-        console.log('history', history);
         res.status(200).json({daysToFirstHit: daysToFirstHit, daysToAllHits: daysToAllHits, history:history});
     });
 };
